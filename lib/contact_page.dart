@@ -26,8 +26,8 @@ class ContactPage extends StatelessWidget {
   }
 
   //https://stackoverflow.com/questions/60257233/the-box-contacts-is-already-open-and-of-type-boxcontact-when-trying-to-acces
-  ListView _buildListView() {
-    final contactsBox = Hive.box('contacts');
+  Widget _buildListView() {
+    // final contactsBox = Hive.box('contacts');
     // return ListView(
     //   children: <Widget>[
     //     ListTile(
@@ -36,20 +36,19 @@ class ContactPage extends StatelessWidget {
     //     )
     //   ],
     // );
-    return ListView.builder(
-      itemCount: contactsBox.length,
-      itemBuilder: (BuildContext context, int index) {
 
-        // final Contact contact = Hive.box('contacts').getAt(index);
-
-        final contact = contactsBox.getAt(index) as Contact;
-
-        // List listOfContacts = contactsBox.values.toList();
-        // Contact contact = listOfContacts[index];
-
-        return ListTile(
-          title: Text(contact.name),
-          subtitle: Text(contact.age.toString()),
+    return ValueListenableBuilder( //https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html
+      valueListenable: Hive.box('contacts').listenable(),
+      builder: (context, contactsBox, _) {
+        return ListView.builder(
+          itemCount: contactsBox.length,
+          itemBuilder: (BuildContext context, int index) {
+            final contact = contactsBox.getAt(index) as Contact;
+            return ListTile(
+              title: Text(contact.name),
+              subtitle: Text(contact.age.toString()),
+            );
+          },
         );
       },
     );
