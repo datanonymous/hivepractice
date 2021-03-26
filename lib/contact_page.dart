@@ -37,7 +37,8 @@ class ContactPage extends StatelessWidget {
     //   ],
     // );
 
-    return ValueListenableBuilder( //https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html
+    return ValueListenableBuilder(
+      //https://api.flutter.dev/flutter/widgets/ValueListenableBuilder-class.html
       valueListenable: Hive.box('contacts').listenable(),
       builder: (context, contactsBox, _) {
         return ListView.builder(
@@ -47,6 +48,24 @@ class ContactPage extends StatelessWidget {
             return ListTile(
               title: Text(contact.name),
               subtitle: Text(contact.age.toString()),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.refresh),
+                    onPressed: () {
+                      contactsBox.putAt(
+                          index, Contact('${contact.name}*', contact.age + 1));
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      contactsBox.deleteAt(index);
+                    },
+                  ),
+                ],
+              ),
             );
           },
         );
